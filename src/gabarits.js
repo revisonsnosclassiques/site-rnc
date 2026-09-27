@@ -7,11 +7,11 @@ const RUBRIQUES = {
   "Billet d'humeur": { id: "billets", chemin: "/billets/", titre: "Billets d'humeur" },
   Portrait: { id: "portraits", chemin: "/portraits/", titre: "Portraits" },
   Anecdote: { id: "anecdotes", chemin: "/anecdotes/", titre: "Anecdotes" },
-  Critique: { id: "critiques", chemin: "/critiques/", titre: "Critiques" },
+  Critique: { id: "critiques", chemin: "/critiques/", titre: "Critiques de disques" },
 };
 
 // Rubriques regroupées dans le menu déroulant « Magazine », dans cet ordre.
-const MAGAZINE = ["anecdotes", "portraits", "critiques"];
+const MAGAZINE = ["anecdotes", "portraits", "critiques", "billets"];
 
 const urlArticle = (a) => `/articles/${a.slug}/`;
 const rubrique = (a) => RUBRIQUES[a.type] || RUBRIQUES.Anecdote;
@@ -34,10 +34,9 @@ function navigation(ctx, courant) {
   const r = ctx.reglages;
   const lien = (href, libelle, id, externe) =>
     `<a href="${esc(href)}"${id === courant ? ' aria-current="page"' : ""}${externe ? ' target="_blank" rel="noopener"' : ""}>${libelle}</a>`;
-  const magazineActif = MAGAZINE.includes(courant) || courant === "magazine";
+  const magazineActif = MAGAZINE.includes(courant) || courant === "magazine" || courant === "breves";
   const items = [
     `<li>${lien("/", "À la une", "une")}</li>`,
-    `<li>${lien("/billets/", "Billets", "billets")}</li>`,
     `<li><button type="button" class="nav__bouton${magazineActif ? " est-actif" : ""}" aria-expanded="false" aria-controls="menu-magazine">Magazine ${icone("chevron")}</button></li>`,
     `<li>${lien("/#videos", "Vidéos", "videos")}</li>`,
     `<li>${lien(r.podcast.lien || "/#podcast", "Podcast", "podcast", !!r.podcast.lien)}</li>`,
@@ -53,7 +52,7 @@ function navigation(ctx, courant) {
   <div class="conteneur nav__cadre">
     <ul class="nav__liste">${items.join("")}</ul>
     <div class="nav__panneau" id="menu-magazine" hidden>
-      <ul>${sousMenu}<li>${lien("/magazine/", "Tout le magazine", "magazine")}</li></ul>
+      <ul>${sousMenu}<li>${lien("/breves/", "Brèves archivées", "breves")}</li><li class="nav__tout">${lien("/magazine/", "Tout le magazine", "magazine")}</li></ul>
     </div>
   </div>
 </nav>`;

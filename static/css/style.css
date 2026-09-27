@@ -104,7 +104,7 @@ button, input, select, textarea { font: inherit; }
 .nav__panneau ul { margin: 0; padding: 0; list-style: none; }
 .nav__panneau a { display: flex; align-items: center; min-height: 48px; padding: 0 18px; font-weight: 700; font-size: 16px; text-decoration: none; }
 .nav__panneau a:hover, .nav__panneau a[aria-current="page"] { background: var(--jaune); color: var(--encre); }
-.nav__panneau li:last-child { border-top: 1px solid var(--filet); margin-top: 4px; padding-top: 4px; }
+.nav__panneau .nav__tout { border-top: 1px solid var(--filet); margin-top: 4px; padding-top: 4px; }
 @media (min-width: 900px) {
   .nav .conteneur { padding-right: var(--marge); }
   .nav__liste { gap: 26px; padding-right: 0; min-height: 52px; }
