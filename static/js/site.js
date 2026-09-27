@@ -21,6 +21,39 @@
     });
   });
 
+  // Menu déroulant « Magazine ».
+  var boutonMenu = document.querySelector(".nav__bouton");
+  var panneau = document.getElementById("menu-magazine");
+  if (boutonMenu && panneau) {
+    var cadre = panneau.parentElement;
+    var placer = function () {
+      if (window.matchMedia("(min-width: 900px)").matches) {
+        panneau.style.left = boutonMenu.getBoundingClientRect().left - cadre.getBoundingClientRect().left - 18 + "px";
+      } else {
+        panneau.style.left = "";
+      }
+    };
+    var basculer = function (ouvert) {
+      boutonMenu.setAttribute("aria-expanded", ouvert ? "true" : "false");
+      panneau.hidden = !ouvert;
+      if (ouvert) placer();
+    };
+    boutonMenu.addEventListener("click", function (e) {
+      e.stopPropagation();
+      basculer(panneau.hidden);
+    });
+    document.addEventListener("click", function (e) {
+      if (!panneau.hidden && !panneau.contains(e.target)) basculer(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panneau.hidden) {
+        basculer(false);
+        boutonMenu.focus();
+      }
+    });
+    window.addEventListener("resize", function () { if (!panneau.hidden) placer(); });
+  }
+
   // On retient qu'une personne s'est inscrite pour ne plus la solliciter.
   document.querySelectorAll("[data-newsletter]").forEach(function (form) {
     form.addEventListener("submit", function () { stockage.ecrire("rnc-inscrit", "1"); });

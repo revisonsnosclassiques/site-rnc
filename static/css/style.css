@@ -76,10 +76,7 @@ button, input, select, textarea { font: inherit; }
 .btn-petit:hover { background: var(--encre); color: var(--jaune); }
 
 /* ---------- En-tête et navigation ---------- */
-.annonce { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; padding: 11px var(--marge); background: var(--jaune); color: var(--encre); font-size: 14px; text-align: center; text-decoration: none; }
-.annonce span { font-weight: 700; }
-.annonce strong { font-weight: 900; text-decoration: underline; text-underline-offset: 3px; }
-.annonce:hover { color: var(--encre); }
+.annonce { margin: 0; padding: 11px var(--marge); background: var(--jaune); color: var(--encre); font-weight: 900; font-size: 14px; letter-spacing: 0.01em; text-align: center; }
 .entete__ligne { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; }
 .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--encre); }
 .marque img { width: 40px; height: 40px; }
@@ -97,11 +94,22 @@ button, input, select, textarea { font: inherit; }
 .nav__liste { display: flex; gap: 22px; align-items: center; margin: 0; padding: 0 var(--marge) 0 0; list-style: none; min-height: 48px; border-top: 3px solid var(--encre); border-bottom: 1px solid var(--encre); overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
 .nav__liste::-webkit-scrollbar { display: none; }
 .nav__liste a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 15px; text-decoration: none; }
-.nav__liste a[aria-current="page"] { font-weight: 900; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.nav__liste a[aria-current="page"], .nav__bouton.est-actif { font-weight: 900; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.nav__cadre { position: relative; }
+.nav__bouton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font-weight: 700; font-size: 15px; cursor: pointer; }
+.nav__bouton svg { transition: transform 0.15s ease; }
+.nav__bouton[aria-expanded="true"] svg { transform: rotate(180deg); }
+.nav__panneau { position: absolute; top: 100%; left: var(--marge); right: var(--marge); z-index: 30; padding: 6px 0; background: var(--blanc); border: 2px solid var(--encre); box-shadow: 6px 6px 0 var(--encre); }
+.nav__panneau[hidden] { display: none; }
+.nav__panneau ul { margin: 0; padding: 0; list-style: none; }
+.nav__panneau a { display: flex; align-items: center; min-height: 48px; padding: 0 18px; font-weight: 700; font-size: 16px; text-decoration: none; }
+.nav__panneau a:hover, .nav__panneau a[aria-current="page"] { background: var(--jaune); color: var(--encre); }
+.nav__panneau li:last-child { border-top: 1px solid var(--filet); margin-top: 4px; padding-top: 4px; }
 @media (min-width: 900px) {
   .nav .conteneur { padding-right: var(--marge); }
   .nav__liste { gap: 26px; padding-right: 0; min-height: 52px; }
   .nav__droite { margin-left: auto; }
+  .nav__panneau { right: auto; min-width: 240px; }
 }
 
 /* ---------- Sections génériques ---------- */

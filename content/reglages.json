@@ -2,13 +2,13 @@
   "site": {
     "nom": "Révisons Nos Classiques",
     "url": "https://revisonsnosclassiques.fr",
-    "slogan": "le seul média engagé sur la musique classique",
+    "slogan": "La musique classique, sans le vernis.",
     "description": "Scandales dans les maisons d'opéra, compositeurs effacés de l'histoire, anecdotes improbables : la musique classique racontée avec impertinence.",
-    "email": "revisonsnosclassiques@gmail.com"
+    "email": ""
   },
-  "annonce": "Nouveau : la newsletter gratuite de Révisons Nos Classiques.",
+  "annonce": "Le seul média engagé sur la musique classique",
   "newsletter": {
-    "action": "https://e9ca77c2.sibforms.com/serve/MUIFAGHcPnfpbO5F4nxUnq8h4MkJOQtgQu3ycK8DCZJKdZWjx0qimSjEjPZQdUOzNkw1AublRh9DqZ8MdKEXelFd_jYEc7asRqaX03ZXH557HWE5GGuWUsfZ_0s4KoIuJkneDcYk9Dt-RX6pHynhTd1uS4GbGSqe-ID8UIDAAskrxqHjfMiBxLmiBGd3iZITwMpfO-Xp-c0WSjYskQ==",
+    "action": "",
     "cadeau": "Les 10 scandales qui ont secoué la musique classique"
   },
   "stats": {
@@ -19,7 +19,8 @@
   },
   "reseaux": {
     "instagram": "https://www.instagram.com/revisonsnosclassiques/",
-    "facebook": "https://www.facebook.com/revisonsnosclassiques"
+    "facebook": "",
+    "spotify": ""
   },
   "livre": {
     "lien": "https://tidd.ly/4egindQ",
@@ -29,7 +30,10 @@
   "podcast": {
     "lien": ""
   },
+  "playlists": {
+    "lien": ""
+  },
   "opus": {
-    "lien": "https://opus-jeu.netlify.app/"
+    "lien": ""
   }
 }

@@ -7,7 +7,11 @@ const RUBRIQUES = {
   "Billet d'humeur": { id: "billets", chemin: "/billets/", titre: "Billets d'humeur" },
   Portrait: { id: "portraits", chemin: "/portraits/", titre: "Portraits" },
   Anecdote: { id: "anecdotes", chemin: "/anecdotes/", titre: "Anecdotes" },
+  Critique: { id: "critiques", chemin: "/critiques/", titre: "Critiques" },
 };
+
+// Rubriques regroupées dans le menu déroulant « Magazine », dans cet ordre.
+const MAGAZINE = ["anecdotes", "portraits", "critiques"];
 
 const urlArticle = (a) => `/articles/${a.slug}/`;
 const rubrique = (a) => RUBRIQUES[a.type] || RUBRIQUES.Anecdote;
@@ -19,6 +23,8 @@ function icone(nom) {
     lecture: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7 4 20 12 7 20"></polygon></svg>',
     coche: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg>',
     fermer: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>',
+    chevron: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>',
+    chevron: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>',
     micro: '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0"></path><line x1="12" y1="17" x2="12" y2="22"></line></svg>',
   };
   return icones[nom] || "";
@@ -26,31 +32,36 @@ function icone(nom) {
 
 function navigation(ctx, courant) {
   const r = ctx.reglages;
-  const liens = [
-    { id: "une", libelle: "À la une", href: "/" },
-    { id: "breves", libelle: "Brèves", href: "/breves/" },
-    { id: "billets", libelle: "Billets", href: "/billets/" },
-    { id: "portraits", libelle: "Portraits", href: "/portraits/" },
-    { id: "anecdotes", libelle: "Anecdotes", href: "/anecdotes/" },
-    { id: "videos", libelle: "Vidéos", href: "/#videos" },
-    { id: "podcast", libelle: "Podcast", href: r.podcast.lien || "/#podcast" },
-    { id: "livre", libelle: "Le livre", href: "/#livre" },
+  const lien = (href, libelle, id, externe) =>
+    `<a href="${esc(href)}"${id === courant ? ' aria-current="page"' : ""}${externe ? ' target="_blank" rel="noopener"' : ""}>${libelle}</a>`;
+  const magazineActif = MAGAZINE.includes(courant) || courant === "magazine";
+  const items = [
+    `<li>${lien("/", "À la une", "une")}</li>`,
+    `<li>${lien("/billets/", "Billets", "billets")}</li>`,
+    `<li><button type="button" class="nav__bouton${magazineActif ? " est-actif" : ""}" aria-expanded="false" aria-controls="menu-magazine">Magazine ${icone("chevron")}</button></li>`,
+    `<li>${lien("/#videos", "Vidéos", "videos")}</li>`,
+    `<li>${lien(r.podcast.lien || "/#podcast", "Podcast", "podcast", !!r.podcast.lien)}</li>`,
   ];
-  if (r.opus.lien) liens.push({ id: "opus", libelle: "Opus", href: r.opus.lien });
-  liens.push({ id: "partenariats", libelle: "Partenariats", href: "/partenariats/", droite: true });
-  return `<nav class="nav" aria-label="Rubriques"><div class="conteneur"><ul class="nav__liste">${liens
-    .map(
-      (l) =>
-        `<li${l.droite ? ' class="nav__droite"' : ""}><a href="${l.href}"${l.id === courant ? ' aria-current="page"' : ""}>${l.libelle}</a></li>`
-    )
-    .join("")}</ul></div></nav>`;
+  if (r.reseaux.spotify) items.push(`<li>${lien(r.reseaux.spotify, "Playlists", "playlists", true)}</li>`);
+  items.push(`<li>${lien("/#livre", "Le livre", "livre")}</li>`);
+  if (r.opus.lien) items.push(`<li>${lien(r.opus.lien, "Opus", "opus", true)}</li>`);
+  items.push(`<li class="nav__droite">${lien("/partenariats/", "Partenariats", "partenariats")}</li>`);
+  const sousMenu = MAGAZINE.map((id) => Object.values(RUBRIQUES).find((x) => x.id === id))
+    .map((x) => `<li>${lien(x.chemin, x.titre, x.id)}</li>`)
+    .join("");
+  return `<nav class="nav" aria-label="Rubriques">
+  <div class="conteneur nav__cadre">
+    <ul class="nav__liste">${items.join("")}</ul>
+    <div class="nav__panneau" id="menu-magazine" hidden>
+      <ul>${sousMenu}<li>${lien("/magazine/", "Tout le magazine", "magazine")}</li></ul>
+    </div>
+  </div>
+</nav>`;
 }
 
 function entete(ctx, courant) {
   const r = ctx.reglages;
-  const annonce = r.annonce
-    ? `<a class="annonce" href="/#newsletter"><span>${esc(r.annonce)}</span> <strong>Je m'inscris</strong></a>`
-    : "";
+  const annonce = r.annonce ? `<p class="annonce">${esc(r.annonce)}</p>` : "";
   return `${annonce}
 <header class="entete">
   <div class="conteneur entete__ligne">
@@ -69,6 +80,8 @@ function pied(ctx) {
   const suivre = [
     r.reseaux.instagram && `<a href="${esc(r.reseaux.instagram)}" target="_blank" rel="noopener">Instagram</a>`,
     r.reseaux.facebook && `<a href="${esc(r.reseaux.facebook)}" target="_blank" rel="noopener">Facebook</a>`,
+    r.reseaux.spotify && `<a href="${esc(r.reseaux.spotify)}" target="_blank" rel="noopener">Playlists Spotify</a>`,
+    (r.playlists || {}).lien && `<a href="${esc(r.playlists.lien)}" target="_blank" rel="noopener">Playlists Spotify</a>`,
   ]
     .filter(Boolean)
     .join("");
@@ -79,7 +92,7 @@ function pied(ctx) {
       <p>${esc(r.site.slogan)}</p>
     </div>
     <div class="pied__colonnes">
-      <div><p class="pied__titre">Explorer</p><a href="/breves/">Brèves</a><a href="/billets/">Billets</a><a href="/portraits/">Portraits</a><a href="/anecdotes/">Anecdotes</a><a href="/#livre">Le livre</a></div>
+      <div><p class="pied__titre">Explorer</p><a href="/breves/">Brèves</a><a href="/billets/">Billets</a><a href="/portraits/">Portraits</a><a href="/anecdotes/">Anecdotes</a><a href="/critiques/">Critiques</a><a href="/#livre">Le livre</a></div>
       ${suivre ? `<div><p class="pied__titre">Suivre</p>${suivre}</div>` : ""}
       <div><p class="pied__titre">Infos</p><a href="/partenariats/">Partenariats</a><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a></div>
     </div>
@@ -269,7 +282,7 @@ function pageAccueil(ctx, { articles, breves, videos }) {
 
   const aLire = `<section class="section">
   <div class="conteneur">
-    <div class="filet-titre"><h2 class="titre-section">À lire aussi</h2><a href="/anecdotes/">Tous les articles</a></div>
+    <div class="filet-titre"><h2 class="titre-section">À lire aussi</h2><a href="/magazine/">Tout le magazine</a></div>
     <div class="grille-3">
       ${autres.map(carteArticle).join("")}
       ${podcast}
@@ -676,4 +689,4 @@ ${bandeNewsletterCompacte(ctx)}`;
   return page(ctx, { titre: "Page introuvable", chemin: "/404.html", contenu });
 }
 
-module.exports = { pageAccueil, pageArticle, pageRubrique, pageBreves, pagePartenariats, pageTexte, pageMerci, pagePartenariatMerci, page404, RUBRIQUES, urlArticle };
+module.exports = { pageAccueil, pageArticle, pageRubrique, pageBreves, pagePartenariats, pageTexte, pageMerci, pagePartenariatMerci, page404, RUBRIQUES, MAGAZINE, urlArticle };

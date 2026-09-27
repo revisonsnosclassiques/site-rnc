@@ -13,7 +13,7 @@ collections:
   - name: articles
     label: Articles
     label_singular: Article
-    description: "Billets d'humeur, portraits et anecdotes. L'article coché « à la une » le plus récent s'affiche en grand sur l'accueil."
+    description: "Billets d'humeur, anecdotes, portraits et critiques. L'article coché « à la une » le plus récent s'affiche en grand sur l'accueil."
     folder: content/articles
     create: true
     format: json
@@ -29,7 +29,7 @@ collections:
       - label: Rubrique
         name: type
         widget: select
-        options: ["Billet d'humeur", "Portrait", "Anecdote"]
+        options: ["Billet d'humeur", "Anecdote", "Portrait", "Critique"]
       - label: Date de publication
         name: date
         widget: datetime
@@ -119,7 +119,7 @@ collections:
               - { label: Slogan, name: slogan, widget: string }
               - { label: "Description (moteurs de recherche)", name: description, widget: text }
               - { label: "Email de contact", name: email, widget: string, required: false }
-          - { label: "Bandeau jaune en haut du site", name: annonce, widget: string, required: false, hint: "Laisser vide pour masquer le bandeau." }
+          - { label: "Bandeau jaune en haut du site", name: annonce, widget: string, required: false, hint: "Phrase affichée tout en haut de chaque page. Laisser vide pour masquer le bandeau." }
           - label: Newsletter
             name: newsletter
             widget: object
@@ -140,6 +140,7 @@ collections:
             fields:
               - { label: Instagram, name: instagram, widget: string, required: false }
               - { label: Facebook, name: facebook, widget: string, required: false }
+              - { label: "Spotify (lien du compte ou des playlists)", name: spotify, widget: string, required: false, hint: "Dès que ce champ est rempli, l'onglet « Playlists » apparaît dans le menu." }
           - label: Livre
             name: livre
             widget: object
@@ -152,6 +153,12 @@ collections:
             widget: object
             fields:
               - { label: "Lien du podcast", name: lien, widget: string, required: false, hint: "Tant que ce champ est vide, l'accueil annonce « Le podcast arrive »." }
+          - label: Playlists
+            name: playlists
+            widget: object
+            required: false
+            fields:
+              - { label: "Lien de votre compte Spotify", name: lien, widget: string, required: false, hint: "Tant que ce champ est vide, l'onglet Playlists n'apparaît pas dans le menu." }
           - label: Opus
             name: opus
             widget: object

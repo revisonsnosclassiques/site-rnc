@@ -41,9 +41,22 @@ for (const [type, r] of Object.entries(g.RUBRIQUES)) {
     billets: "Ce qui cloche dans les institutions culturelles, dit sans détour.",
     portraits: "Des vies de musiciens hors du commun, racontées en quelques minutes.",
     anecdotes: "L'histoire improbable qui se cache derrière un nom ou une œuvre.",
+    critiques: "Concerts, disques et mises en scène passés au crible.",
   }[r.id];
   publier(r.chemin, g.pageRubrique(ctx, { id: r.id, titre: r.titre, intro, chemin: r.chemin, articles: articles.filter((a) => a.type === type) }));
 }
+
+const typesMagazine = Object.entries(g.RUBRIQUES).filter(([, r]) => g.MAGAZINE.includes(r.id)).map(([type]) => type);
+publier(
+  "/magazine/",
+  g.pageRubrique(ctx, {
+    id: "magazine",
+    titre: "Le magazine",
+    intro: "Anecdotes, portraits et critiques : la musique classique racontée autrement.",
+    chemin: "/magazine/",
+    articles: articles.filter((a) => typesMagazine.includes(a.type)),
+  })
+);
 
 publier("/breves/", g.pageBreves(ctx, breves));
 publier("/partenariats/", g.pagePartenariats(ctx));
