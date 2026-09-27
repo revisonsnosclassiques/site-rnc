@@ -1,0 +1,8 @@
+{
+  "name": "revisons-nos-classiques",
+  "private": true,
+  "description": "Site de Révisons Nos Classiques, généré sans dépendance.",
+  "scripts": {
+    "build": "node build.js"
+  }
+}

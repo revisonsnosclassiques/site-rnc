@@ -1,0 +1,178 @@
+# Interface d'administration de Révisons Nos Classiques (Decap CMS).
+# Chaque enregistrement crée une modification dans GitHub, puis Netlify remet le site en ligne.
+backend:
+  name: git-gateway
+  branch: main
+
+locale: fr
+logo_url: /images/logo-rnc.png
+media_folder: static/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: articles
+    label: Articles
+    label_singular: Article
+    description: "Billets d'humeur, portraits et anecdotes. L'article coché « à la une » le plus récent s'affiche en grand sur l'accueil."
+    folder: content/articles
+    create: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    summary: "{{title}} ({{type}})"
+    sortable_fields: [date, title]
+    fields:
+      - label: Titre
+        name: title
+        widget: string
+        hint: "Pour surligner un passage en jaune, entourez-le de ==, par exemple : Opéra de Limoges : ==des salariés à bout=="
+      - label: Rubrique
+        name: type
+        widget: select
+        options: ["Billet d'humeur", "Portrait", "Anecdote"]
+      - label: Date de publication
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DDTHH:mm"
+      - label: "À la une"
+        name: une
+        widget: boolean
+        default: false
+        required: false
+      - label: Chapeau
+        name: chapo
+        widget: text
+        hint: "Une ou deux phrases d'accroche, affichées sous le titre et dans les partages."
+      - label: Image principale
+        name: image
+        widget: image
+        required: false
+      - label: "Crédit de l'image"
+        name: credit
+        widget: string
+        required: false
+      - label: "À écouter"
+        name: ecouter
+        widget: string
+        required: false
+        hint: "Lien YouTube ou Spotify : le lecteur s'affiche dans l'article. Autre lien : un bouton."
+      - label: Texte
+        name: body
+        widget: markdown
+        buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list]
+        editor_components: [image]
+      - label: "Brouillon (ne pas publier)"
+        name: brouillon
+        widget: boolean
+        default: false
+        required: false
+
+  - name: breves
+    label: Brèves
+    label_singular: Brève
+    description: "L'actualité du milieu classique. Les cinq plus récentes apparaissent sur l'accueil."
+    folder: content/breves
+    create: true
+    format: json
+    extension: json
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Titre, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DDTHH:mm" }
+      - { label: "Texte (facultatif)", name: texte, widget: text, required: false }
+      - { label: "Lien (facultatif)", name: lien, widget: string, required: false }
+
+  - name: videos
+    label: Vidéos
+    files:
+      - label: "Vidéos de l'accueil"
+        name: videos
+        file: content/videos.json
+        fields:
+          - label: Vidéos
+            name: videos
+            widget: list
+            summary: "{{fields.titre}}"
+            hint: "Les huit premières s'affichent sur l'accueil, dans cet ordre."
+            fields:
+              - { label: Titre, name: titre, widget: string }
+              - { label: "Lien vers la vidéo (Instagram, YouTube…)", name: lien, widget: string }
+              - { label: "Miniature (format vertical)", name: miniature, widget: image, required: false }
+              - { label: "Durée (facultatif)", name: duree, widget: string, required: false }
+
+  - name: reglages
+    label: Réglages
+    editor: { preview: false }
+    files:
+      - label: Réglages du site
+        name: reglages
+        file: content/reglages.json
+        fields:
+          - label: Site
+            name: site
+            widget: object
+            fields:
+              - { label: Nom, name: nom, widget: string }
+              - { label: "Adresse du site", name: url, widget: string, hint: "Par exemple https://revisonsnosclassiques.fr" }
+              - { label: Slogan, name: slogan, widget: string }
+              - { label: "Description (moteurs de recherche)", name: description, widget: text }
+              - { label: "Email de contact", name: email, widget: string, required: false }
+          - { label: "Bandeau jaune en haut du site", name: annonce, widget: string, required: false, hint: "Laisser vide pour masquer le bandeau." }
+          - label: Newsletter
+            name: newsletter
+            widget: object
+            fields:
+              - { label: "Adresse du formulaire Brevo (action)", name: action, widget: string, required: false, hint: "Dans Brevo : Formulaires > votre formulaire > Partager > code HTML, recopier l'adresse qui suit action=." }
+              - { label: "Titre du guide offert", name: cadeau, widget: string }
+          - label: Chiffres
+            name: stats
+            widget: object
+            fields:
+              - { label: "Abonnés Instagram", name: abonnes, widget: string }
+              - { label: "Vues sur le dernier mois", name: vues, widget: string }
+              - { label: "Part des moins de 35 ans", name: jeunes, widget: string }
+              - { label: "Date des chiffres", name: date, widget: string }
+          - label: Réseaux
+            name: reseaux
+            widget: object
+            fields:
+              - { label: Instagram, name: instagram, widget: string, required: false }
+              - { label: Facebook, name: facebook, widget: string, required: false }
+          - label: Livre
+            name: livre
+            widget: object
+            fields:
+              - { label: "Lien de commande", name: lien, widget: string, required: false }
+              - { label: "Lien libraire (facultatif)", name: libraire, widget: string, required: false }
+              - { label: Prix, name: prix, widget: string, required: false }
+          - label: Podcast
+            name: podcast
+            widget: object
+            fields:
+              - { label: "Lien du podcast", name: lien, widget: string, required: false, hint: "Tant que ce champ est vide, l'accueil annonce « Le podcast arrive »." }
+          - label: Opus
+            name: opus
+            widget: object
+            fields:
+              - { label: "Lien du jeu", name: lien, widget: string, required: false }
+
+  - name: pages
+    label: Pages légales
+    editor: { preview: false }
+    files:
+      - label: Mentions légales
+        name: mentions
+        file: content/pages/mentions-legales.json
+        fields:
+          - { label: Titre, name: title, widget: string }
+          - { label: "Dernière mise à jour", name: maj, widget: string }
+          - { label: Texte, name: body, widget: markdown }
+      - label: Politique de confidentialité
+        name: confidentialite
+        file: content/pages/confidentialite.json
+        fields:
+          - { label: Titre, name: title, widget: string }
+          - { label: "Dernière mise à jour", name: maj, widget: string }
+          - { label: Texte, name: body, widget: markdown }
