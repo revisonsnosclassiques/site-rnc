@@ -13,7 +13,9 @@ const CONTENU = path.join(RACINE, "content");
 const reglages = lireJSON(path.join(CONTENU, "reglages.json"));
 // Sur Netlify, la variable URL contient l'adresse du site ; sinon on prend celle des réglages.
 const url = (process.env.URL || reglages.site.url || "").replace(/\/$/, "");
-const ctx = { reglages, url, version: Date.now().toString(36) };
+const accueil = lireJSON(path.join(CONTENU, "accueil.json"), {});
+const partenariats = lireJSON(path.join(CONTENU, "partenariats.json"), {});
+const ctx = { reglages, accueil, partenariats, url, version: Date.now().toString(36) };
 
 const parDate = (a, b) => new Date(b.date) - new Date(a.date);
 const articles = lireDossier(path.join(CONTENU, "articles")).filter((a) => !a.brouillon).sort(parDate);

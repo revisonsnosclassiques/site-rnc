@@ -10,6 +10,183 @@ media_folder: static/images/uploads
 public_folder: /images/uploads
 
 collections:
+  - name: pages_site
+    label: Pages du site
+    editor: { preview: false }
+    files:
+      - label: "Accueil"
+        name: accueil
+        file: content/accueil.json
+        description: "Dans les titres, entourez un passage de == pour le mettre en valeur. Dans les textes, {abonnes}, {vues} et {jeunes} sont remplacés par les chiffres des réglages. Un champ laissé vide reprend le texte d'origine."
+        fields:
+          - label: "Ordre des blocs"
+            name: ordre
+            widget: list
+            hint: "Faites glisser pour changer l'ordre, supprimez un bloc pour le masquer. L'article à la une et les brèves restent toujours en haut."
+            field:
+              label: Bloc
+              name: bloc
+              widget: select
+              options:
+                - { label: "Bande newsletter jaune", value: newsletter }
+                - { label: "À lire aussi et podcast", value: a_lire }
+                - { label: "Le livre", value: livre }
+                - { label: "Vidéos", value: videos }
+                - { label: "Opus", value: opus }
+                - { label: "Bandeau partenaires", value: partenaires }
+                - { label: "Inscription finale", value: final }
+          - label: "Colonne des brèves"
+            name: breves
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: "Titre de l'encadré d'inscription", name: encart_titre, widget: string, required: false }
+              - { label: "Texte de l'encadré d'inscription", name: encart_texte, widget: text, required: false }
+          - label: "Bande newsletter jaune"
+            name: newsletter
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: "Arguments (une ligne par argument)", name: atouts, widget: list, field: { label: Argument, name: atout, widget: string }, required: false }
+              - { label: "Phrase sous les arguments", name: preuve, widget: string, required: false, hint: "**texte** met en gras." }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+          - label: "À lire aussi"
+            name: a_lire
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+          - label: "Carte du podcast"
+            name: podcast
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Titre avant la sortie", name: titre, widget: string, required: false }
+              - { label: "Titre une fois le podcast en ligne", name: titre_en_ligne, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+          - label: "Le livre"
+            name: livre
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: "Texte de présentation", name: texte, widget: text, required: false }
+              - { label: "Informations (éditeur, pages)", name: infos, widget: string, required: false, hint: "Le prix des réglages s'ajoute automatiquement." }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+          - label: "Vidéos"
+            name: videos
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+              - { label: "Message quand il n'y a pas encore de vidéo", name: vide, widget: text, required: false }
+          - label: "Opus"
+            name: opus
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+          - label: "Bandeau partenaires"
+            name: partenaires
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+          - label: "Inscription finale"
+            name: final
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false, hint: "Le passage entouré de == s'affiche en jaune." }
+              - { label: Texte, name: texte, widget: string, required: false }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+      - label: "Page Partenariats"
+        name: partenariats
+        file: content/partenariats.json
+        description: "Dans les titres, entourez un passage de == pour le mettre en valeur. {abonnes}, {vues}, {jeunes} et {date} sont remplacés par les chiffres des réglages. Un champ laissé vide reprend le texte d'origine."
+        fields:
+          - label: "En-tête"
+            name: hero
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+          - label: "Chiffres"
+            name: chiffres
+            widget: object
+            collapsed: true
+            fields:
+              - label: "Chiffres affichés (quatre maximum)"
+                name: liste
+                widget: list
+                max: 4
+                summary: "{{fields.valeur}} {{fields.legende}}"
+                fields:
+                  - { label: Valeur, name: valeur, widget: string, hint: "Par exemple {abonnes}, ou un texte comme 1 livre." }
+                  - { label: Légende, name: legende, widget: string }
+              - { label: "Note sous les chiffres", name: note, widget: string, required: false }
+          - label: "Ils nous ont fait confiance"
+            name: references
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - label: Références
+                name: liste
+                widget: list
+                required: false
+                hint: "Laissez la liste vide pour masquer ce bloc."
+                summary: "{{fields.nom}}"
+                fields:
+                  - { label: Nom, name: nom, widget: string }
+                  - { label: "Ce que vous avez fait ensemble", name: description, widget: string, required: false }
+                  - { label: "Logo (facultatif, avec l'accord du partenaire)", name: logo, widget: image, required: false }
+                  - { label: "Lien (facultatif)", name: lien, widget: string, required: false }
+          - label: "Pourquoi Révisons Nos Classiques"
+            name: pourquoi
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - label: Arguments
+                name: points
+                widget: list
+                summary: "{{fields.titre}}"
+                fields:
+                  - { label: Titre, name: titre, widget: string }
+                  - { label: Texte, name: texte, widget: text, required: false }
+          - label: "Formats proposés"
+            name: formats
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Introduction, name: intro, widget: string, required: false }
+              - label: Formats
+                name: liste
+                widget: list
+                summary: "{{fields.titre}}"
+                fields:
+                  - { label: Titre, name: titre, widget: string }
+                  - { label: Texte, name: texte, widget: text, required: false }
+              - { label: "Note en bas du bloc", name: note, widget: string, required: false }
+          - label: "Formulaire de contact"
+            name: contact
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Titre, name: titre, widget: string, required: false }
+              - { label: Texte, name: texte, widget: text, required: false }
+              - { label: "Texte du bouton", name: bouton, widget: string, required: false }
+
   - name: articles
     label: Articles
     label_singular: Article

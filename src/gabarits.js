@@ -1,7 +1,7 @@
 // Gabarits HTML du site Révisons Nos Classiques.
 // Chaque fonction renvoie du HTML sous forme de texte.
 
-const { esc, surligne, brut, markdown, dateFr, dateCourte, tempsLecture } = require("./outils");
+const { esc, surligne, brut, enLigne, markdown, dateFr, dateCourte, tempsLecture } = require("./outils");
 
 const RUBRIQUES = {
   "Billet d'humeur": { id: "billets", chemin: "/billets/", titre: "Billets d'humeur" },
@@ -91,7 +91,7 @@ function pied(ctx) {
       <p>${esc(r.site.slogan)}</p>
     </div>
     <div class="pied__colonnes">
-      <div><p class="pied__titre">Explorer</p><a href="/breves/">Brèves</a><a href="/billets/">Billets</a><a href="/portraits/">Portraits</a><a href="/anecdotes/">Anecdotes</a><a href="/critiques/">Critiques</a><a href="/#livre">Le livre</a></div>
+      <div><p class="pied__titre">Explorer</p><a href="/anecdotes/">Anecdotes</a><a href="/portraits/">Portraits</a><a href="/critiques/">Critiques de disques</a><a href="/billets/">Billets d'humeur</a><a href="/breves/">Brèves archivées</a><a href="/#livre">Le livre</a></div>
       ${suivre ? `<div><p class="pied__titre">Suivre</p>${suivre}</div>` : ""}
       <div><p class="pied__titre">Infos</p><a href="/partenariats/">Partenariats</a><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a></div>
     </div>
@@ -158,18 +158,19 @@ function blocCadeau(ctx) {
 </div>`;
 }
 
-function blocLivre(ctx) {
+function blocLivre(ctx, t) {
   const l = ctx.reglages.livre;
+  const infos = [t.infos, l.prix].filter(Boolean).map((x) => esc(jetons(ctx, x))).join(", ");
   return `<section class="livre" id="livre">
   <div class="conteneur livre__grille">
     <img class="livre__couv" src="/images/couverture-livre.webp" alt="Couverture du livre 49 petites histoires de la musique classique" width="290" height="406" loading="lazy">
     <div>
       <span class="tag">Le livre</span>
-      <h2 class="titre-section">49 petites histoires de la musique classique</h2>
-      <p class="livre__texte">Pourquoi Carmen fut d'abord un échec. Comment Liszt devint la première rockstar de l'histoire. Et quel rapport entre une fistule de Louis XIV et l'hymne britannique. 49 histoires, et 49 morceaux commentés à écouter dans une playlist exclusive Warner Classics.</p>
-      <p class="livre__infos">Éditions De Boeck Supérieur, 192 pages${l.prix ? `, ${esc(l.prix)}` : ""}</p>
+      <h2 class="titre-section">${titreClair(ctx, t.titre)}</h2>
+      ${t.texte ? `<p class="livre__texte">${texteRiche(ctx, t.texte)}</p>` : ""}
+      ${infos ? `<p class="livre__infos">${infos}</p>` : ""}
       <div class="boutons">
-        ${l.lien ? `<a class="btn btn--noir" href="${esc(l.lien)}" target="_blank" rel="noopener sponsored">Commander le livre</a>` : ""}
+        ${l.lien ? `<a class="btn btn--noir" href="${esc(l.lien)}" target="_blank" rel="noopener sponsored">${esc(t.bouton || "Commander le livre")}</a>` : ""}
         ${l.libraire ? `<a class="btn btn--contour" href="${esc(l.libraire)}" target="_blank" rel="noopener">Trouver chez un libraire</a>` : ""}
       </div>
       ${l.lien ? '<p class="livre__mention">Lien affilié : une petite commission nous est reversée, sans surcoût pour vous.</p>' : ""}
@@ -230,8 +231,84 @@ ${
 
 // ---------- Accueil ----------
 
+// Textes de l'accueil par défaut. Ils sont modifiables dans l'administration (Accueil),
+// qui les enregistre dans content/accueil.json. Un champ laissé vide reprend ces valeurs.
+const ACCUEIL_DEFAUT = {
+  ordre: ["newsletter", "a_lire", "livre", "videos", "opus", "partenaires", "final"],
+  breves: {
+    titre: "Les brèves",
+    encart_titre: "Ne ratez plus aucune brève.",
+    encart_texte: "L'actu du milieu classique, résumée dans votre boîte mail.",
+  },
+  newsletter: {
+    titre: "L'actu du classique, sans le vernis, dans votre boîte mail.",
+    atouts: [
+      "Les coulisses des maisons d'opéra et des orchestres, décryptées.",
+      "Des anecdotes à ressortir au prochain dîner.",
+      "Zéro jargon : pas besoin d'avoir fait le conservatoire.",
+    ],
+    preuve: "Déjà **{abonnes} abonnés** nous suivent sur Instagram.",
+    bouton: "Recevoir la newsletter",
+  },
+  a_lire: { titre: "À lire aussi" },
+  podcast: {
+    titre: "Le podcast arrive.",
+    titre_en_ligne: "Le podcast est là.",
+    texte: "Le même regard impertinent sur la musique classique, cette fois à écouter.",
+  },
+  livre: {
+    titre: "49 petites histoires de la musique classique",
+    texte:
+      "Pourquoi Carmen fut d'abord un échec. Comment Liszt devint la première rockstar de l'histoire. Et quel rapport entre une fistule de Louis XIV et l'hymne britannique. 49 histoires, et 49 morceaux commentés à écouter dans une playlist exclusive Warner Classics.",
+    infos: "Éditions De Boeck Supérieur, 192 pages",
+    bouton: "Commander le livre",
+  },
+  videos: {
+    titre: "Les vidéos",
+    texte: "Nos reels sur les questions de société qui traversent la musique classique.",
+    vide: "Nos vidéos arrivent ici très bientôt. En attendant, elles sont toutes sur Instagram.",
+  },
+  opus: {
+    titre: "Opus, le jeu",
+    texte: "Instrumentiste, chanteur, compositeur ou chef d'orchestre : choisissez votre voie et faites carrière dans la musique classique.",
+  },
+  partenaires: {
+    titre: "Festival, orchestre, label, salle de concert ?",
+    texte:
+      "Révisons Nos Classiques s'adresse chaque jour à {abonnes} abonnés sur Instagram, curieux et passionnés de musique classique. C'est aussi un livre, « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur. Parlons de votre saison, de vos artistes et de vos projets.",
+    bouton: "Découvrir les partenariats",
+  },
+  final: {
+    titre: "Révisez vos classiques ==depuis votre boîte mail.==",
+    texte: "Inscription en dix secondes, désinscription en un clic.",
+    bouton: "Je m'inscris",
+  },
+};
+
+// Fusionne les textes saisis avec les valeurs par défaut (un champ vide reprend la valeur par défaut).
+function fusion(defaut, valeur) {
+  if (Array.isArray(defaut)) return Array.isArray(valeur) && valeur.filter(Boolean).length ? valeur.filter(Boolean) : defaut;
+  if (defaut && typeof defaut === "object") {
+    const sortie = {};
+    for (const cle of Object.keys(defaut)) sortie[cle] = fusion(defaut[cle], valeur ? valeur[cle] : undefined);
+    return sortie;
+  }
+  return valeur === undefined || valeur === null || valeur === "" ? defaut : valeur;
+}
+
+// Remplace {abonnes}, {vues} et {jeunes} par les chiffres des réglages.
+function jetons(ctx, texte = "") {
+  const s = ctx.reglages.stats;
+  return String(texte).replace(/\{(abonnes|vues|jeunes|date)\}/g, (m, cle) => s[cle] || "");
+}
+const texteRiche = (ctx, texte) => enLigne(jetons(ctx, texte));
+const titreClair = (ctx, texte) => surligne(jetons(ctx, texte));
+const titreJaune = (ctx, texte) => esc(jetons(ctx, texte)).replace(/==(.+?)==/g, '<mark class="surligne surligne--noir">$1</mark>');
+const titreSombre = (ctx, texte) => esc(jetons(ctx, texte)).replace(/==(.+?)==/g, '<span class="jaune">$1</span>');
+
 function pageAccueil(ctx, { articles, breves, videos }) {
   const r = ctx.reglages;
+  const t = fusion(ACCUEIL_DEFAUT, ctx.accueil || {});
   const une = articles.find((a) => a.une) || articles[0];
   const autres = articles.filter((a) => a !== une).slice(0, 2);
 
@@ -247,54 +324,58 @@ function pageAccueil(ctx, { articles, breves, videos }) {
     </article>
     <aside class="une__breves" aria-labelledby="titre-breves">
       <div class="filet-titre">
-        <h2 id="titre-breves" class="titre-petit">Les brèves</h2>
+        <h2 id="titre-breves" class="titre-petit">${esc(t.breves.titre)}</h2>
         <a href="/breves/">Toutes les brèves</a>
       </div>
       ${breves.length ? listeBreves(breves.slice(0, 5)) : '<p class="vide">Les premières brèves arrivent très vite.</p>'}
-      ${encartSombre(ctx, "email-breves")}
+      ${encartSombre(ctx, "email-breves", esc(t.breves.encart_titre), texteRiche(ctx, t.breves.encart_texte))}
     </aside>
   </div>
 </section>`
     : "";
 
-  const bandeNewsletter = `<section class="bande-nl dechire" id="newsletter">
+  const blocs = {};
+
+  blocs.newsletter = () => `<section class="bande-nl dechire" id="newsletter">
   <div class="conteneur bande-nl__grille">
     <div>
-      <h2 class="titre-geant">L'actu du classique, sans le vernis, dans votre boîte mail.</h2>
-      <ul class="atouts">
-        <li>${icone("coche")}<span>Les coulisses des maisons d'opéra et des orchestres, décryptées.</span></li>
-        <li>${icone("coche")}<span>Des anecdotes à ressortir au prochain dîner.</span></li>
-        <li>${icone("coche")}<span>Zéro jargon : pas besoin d'avoir fait le conservatoire.</span></li>
-      </ul>
-      <p class="preuve">Déjà <strong>${esc(r.stats.abonnes)} abonnés</strong> nous suivent sur Instagram.</p>
+      <h2 class="titre-geant">${titreJaune(ctx, t.newsletter.titre)}</h2>
+      <ul class="atouts">${t.newsletter.atouts.map((x) => `<li>${icone("coche")}<span>${texteRiche(ctx, x)}</span></li>`).join("")}</ul>
+      ${t.newsletter.preuve ? `<p class="preuve">${texteRiche(ctx, t.newsletter.preuve)}</p>` : ""}
     </div>
     <div class="carte-form">
       ${blocCadeau(ctx)}
-      ${formNewsletter(ctx, { id: "email-bande", variante: "clair", bouton: "Recevoir la newsletter", colonne: true })}
+      ${formNewsletter(ctx, { id: "email-bande", variante: "clair", bouton: esc(t.newsletter.bouton), colonne: true })}
     </div>
   </div>
 </section>`;
 
-  const podcast = r.podcast.lien
-    ? `<article class="carte-podcast" id="podcast">${icone("micro")}<p class="carte-podcast__titre">Le podcast est là.</p><p>Le même regard impertinent sur la musique classique, cette fois à écouter.</p><a class="btn btn--jaune" href="${esc(r.podcast.lien)}" target="_blank" rel="noopener">Écouter le podcast</a></article>`
-    : `<article class="carte-podcast" id="podcast">${icone("micro")}<p class="carte-podcast__titre">Le podcast arrive.</p><p>Le même regard impertinent sur la musique classique, cette fois à écouter.</p><a class="btn btn--jaune" href="#newsletter">Être prévenu à la sortie</a></article>`;
-
-  const aLire = `<section class="section">
+  blocs.a_lire = () => {
+    const p = t.podcast;
+    const podcast = `<article class="carte-podcast" id="podcast">${icone("micro")}<p class="carte-podcast__titre">${titreSombre(ctx, r.podcast.lien ? p.titre_en_ligne : p.titre)}</p><p>${texteRiche(ctx, p.texte)}</p>${
+      r.podcast.lien
+        ? `<a class="btn btn--jaune" href="${esc(r.podcast.lien)}" target="_blank" rel="noopener">Écouter le podcast</a>`
+        : '<a class="btn btn--jaune" href="#newsletter">Être prévenu à la sortie</a>'
+    }</article>`;
+    return `<section class="section">
   <div class="conteneur">
-    <div class="filet-titre"><h2 class="titre-section">À lire aussi</h2><a href="/magazine/">Tout le magazine</a></div>
+    <div class="filet-titre"><h2 class="titre-section">${titreClair(ctx, t.a_lire.titre)}</h2><a href="/magazine/">Tout le magazine</a></div>
     <div class="grille-3">
       ${autres.map(carteArticle).join("")}
       ${podcast}
     </div>
   </div>
 </section>`;
+  };
 
-  const blocVideos = `<section class="videos" id="videos">
+  blocs.livre = () => blocLivre(ctx, t.livre);
+
+  blocs.videos = () => `<section class="videos" id="videos">
   <div class="conteneur">
     <div class="videos__tete">
       <div>
-        <h2 class="titre-section">Les vidéos</h2>
-        <p>Nos reels sur les questions de société qui traversent la musique classique.</p>
+        <h2 class="titre-section">${titreSombre(ctx, t.videos.titre)}</h2>
+        ${t.videos.texte ? `<p>${texteRiche(ctx, t.videos.texte)}</p>` : ""}
       </div>
       ${r.reseaux.instagram ? `<a href="${esc(r.reseaux.instagram)}reels/" target="_blank" rel="noopener">Toutes les vidéos</a>` : ""}
     </div>
@@ -310,50 +391,45 @@ function pageAccueil(ctx, { articles, breves, videos }) {
 </a>`
             )
             .join("")}</div>`
-        : `<p class="videos__vide">Nos vidéos arrivent ici très bientôt. En attendant, elles sont toutes sur <a href="${esc(r.reseaux.instagram)}" target="_blank" rel="noopener">Instagram</a>.</p>`
+        : `<p class="videos__vide">${texteRiche(ctx, t.videos.vide)}${r.reseaux.instagram ? ` <a href="${esc(r.reseaux.instagram)}" target="_blank" rel="noopener">Voir sur Instagram</a>` : ""}</p>`
     }
   </div>
 </section>`;
 
-  const opus = `<section class="section opus">
+  blocs.opus = () => `<section class="section opus">
   <div class="conteneur opus__grille">
     <div>
-      <h2 class="titre-section">Opus, le jeu</h2>
-      <p class="opus__texte">Instrumentiste, chanteur, compositeur ou chef d'orchestre : choisissez votre voie et faites carrière dans la musique classique.</p>
+      <h2 class="titre-section">${titreClair(ctx, t.opus.titre)}</h2>
+      <p class="opus__texte">${texteRiche(ctx, t.opus.texte)}</p>
       ${r.opus.lien ? `<a class="btn btn--noir" href="${esc(r.opus.lien)}" target="_blank" rel="noopener">Jouer à Opus</a>` : ""}
     </div>
     <div class="opus__visuel" aria-hidden="true"><span>Opus</span></div>
   </div>
 </section>`;
 
-  const partenaires = `<section class="bande-partenaires">
+  blocs.partenaires = () => `<section class="bande-partenaires">
   <div class="conteneur bande-partenaires__grille">
-    <h2 class="titre-section">Festival, orchestre, label, salle de concert ?</h2>
+    <h2 class="titre-section">${titreClair(ctx, t.partenaires.titre)}</h2>
     <div>
-      <p>Révisons Nos Classiques s'adresse chaque jour à ${esc(r.stats.abonnes)} abonnés sur Instagram, curieux et passionnés de musique classique. C'est aussi un livre, « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur. Parlons de votre saison, de vos artistes et de vos projets.</p>
-      <a class="btn btn--noir-blanc" href="/partenariats/">Découvrir les partenariats</a>
+      <p>${texteRiche(ctx, t.partenaires.texte)}</p>
+      <a class="btn btn--noir-blanc" href="/partenariats/">${esc(t.partenaires.bouton)}</a>
     </div>
   </div>
 </section>`;
 
-  const final = `<section class="final">
+  blocs.final = () => `<section class="final">
   <div class="conteneur final__contenu">
     <img class="final__logo" src="/images/logo-rnc.png" alt="" width="150" height="150" loading="lazy">
-    <h2 class="titre-geant">Révisez vos classiques <span class="jaune">depuis votre boîte mail.</span></h2>
-    <p>Inscription en dix secondes, désinscription en un clic.</p>
-    ${formNewsletter(ctx, { id: "email-final", variante: "sombre", note: false })}
+    <h2 class="titre-geant">${titreSombre(ctx, t.final.titre)}</h2>
+    ${t.final.texte ? `<p>${texteRiche(ctx, t.final.texte)}</p>` : ""}
+    ${formNewsletter(ctx, { id: "email-final", variante: "sombre", bouton: esc(t.final.bouton), note: false })}
   </div>
 </section>`;
 
+  const contenu = [blocUne, ...t.ordre.filter((id) => blocs[id]).map((id) => blocs[id]())].join("\n");
   const jsonld = JSON.stringify({ "@context": "https://schema.org", "@type": "WebSite", name: r.site.nom, url: ctx.url + "/" });
 
-  return page(ctx, {
-    chemin: "/",
-    courant: "une",
-    identite: true,
-    jsonld,
-    contenu: [blocUne, bandeNewsletter, aLire, blocLivre(ctx), blocVideos, opus, partenaires, final].join("\n"),
-  });
+  return page(ctx, { chemin: "/", courant: "une", identite: true, jsonld, contenu });
 }
 
 // ---------- Article ----------
@@ -535,25 +611,84 @@ ${bandeNewsletterCompacte(ctx)}`;
 
 // ---------- Partenariats ----------
 
+// Textes de la page Partenariats par défaut, modifiables dans l'administration
+// (Pages du site > Page Partenariats), qui les enregistre dans content/partenariats.json.
+const PARTENARIATS_DEFAUT = {
+  hero: {
+    titre: "Faites découvrir votre saison ==à ceux qui n'écoutent pas encore de classique.==",
+    texte:
+      "Révisons Nos Classiques raconte la musique classique avec impertinence, chaque jour, à {abonnes} abonnés sur Instagram. Festivals, orchestres, labels, salles de concert : inventons ensemble la façon d'en parler.",
+    bouton: "Demander le kit média",
+  },
+  chiffres: {
+    liste: [
+      { valeur: "{abonnes}", legende: "abonnés sur Instagram" },
+      { valeur: "{vues}", legende: "vues sur le dernier mois" },
+      { valeur: "{jeunes}", legende: "d'abonnés de moins de 35 ans" },
+      { valeur: "1 livre", legende: "publié chez De Boeck Supérieur" },
+    ],
+    note: "Chiffres Instagram de {date}.",
+  },
+  references: {
+    titre: "Ils nous ont fait confiance",
+    liste: [],
+  },
+  pourquoi: {
+    titre: "Pourquoi Révisons Nos Classiques",
+    points: [
+      { titre: "Un classique qui parle aux curieux", texte: "On raconte la musique classique par ses histoires, ses coulisses et ses débats, sans jargon. Nos contenus s'adressent autant aux curieux qu'aux mélomanes." },
+      { titre: "Un ton qui fait réagir", texte: "Billets d'humeur, portraits, anecdotes, brèves : chaque format est pensé pour être lu jusqu'au bout, commenté et partagé." },
+      { titre: "Une signature reconnue", texte: "Révisons Nos Classiques, c'est aussi un livre : « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur en 2024, avec une playlist exclusive Warner Classics." },
+    ],
+  },
+  formats: {
+    titre: "Ce qu'on peut faire ensemble",
+    intro: "Chaque partenariat est construit sur mesure. Voici les formats les plus demandés.",
+    liste: [
+      { titre: "Reel dédié", texte: "Une vidéo sur votre œuvre, votre artiste ou votre saison, racontée à notre façon." },
+      { titre: "Carrousel", texte: "Une histoire en plusieurs images, idéale pour présenter un programme, un compositeur ou un anniversaire." },
+      { titre: "Brève et stories", texte: "Une annonce rapide pour un concert, une sortie de disque ou l'ouverture d'une billetterie." },
+      { titre: "Couverture d'événement", texte: "On vient à votre festival ou à votre concert, et on le raconte en direct à nos abonnés." },
+      { titre: "Newsletter", texte: "Un encart dans la newsletter, lue par des abonnés qui ont choisi de nous suivre." },
+      { titre: "Podcast", texte: "Un épisode ou une mention dans le podcast Révisons Nos Classiques, dès sa sortie." },
+    ],
+    note: "Tous nos partenariats sont clairement signalés à nos abonnés, conformément à la loi.",
+  },
+  contact: {
+    titre: "Parlons de votre projet.",
+    texte: "Recevez notre kit média : statistiques détaillées de l'audience, exemples de contenus et tarifs.",
+    bouton: "Recevoir le kit média",
+  },
+};
+
 function pagePartenariats(ctx) {
   const r = ctx.reglages;
-  const s = r.stats;
-  const formats = [
-    ["Reel dédié", "Une vidéo sur votre œuvre, votre artiste ou votre saison, racontée à notre façon."],
-    ["Carrousel", "Une histoire en plusieurs images, idéale pour présenter un programme, un compositeur ou un anniversaire."],
-    ["Brève et stories", "Une annonce rapide pour un concert, une sortie de disque ou l'ouverture d'une billetterie."],
-    ["Couverture d'événement", "On vient à votre festival ou à votre concert, et on le raconte en direct à nos abonnés."],
-    ["Newsletter", "Un encart dans la newsletter, lue par des abonnés qui ont choisi de nous suivre."],
-    ["Podcast", "Un épisode ou une mention dans le podcast Révisons Nos Classiques, dès sa sortie."],
-  ];
+  const t = fusion(PARTENARIATS_DEFAUT, ctx.partenariats || {});
+  // Les références peuvent être vidées volontairement : on ne reprend pas la valeur par défaut.
+  const references = ((ctx.partenariats && ctx.partenariats.references && ctx.partenariats.references.liste) || []).filter((x) => x && x.nom);
+
+  const blocReferences = references.length
+    ? `<section class="section section--serre">
+  <div class="conteneur">
+    <div class="filet-titre"><h2 class="titre-petit">${esc(t.references.titre)}</h2></div>
+    <ul class="references">${references
+      .map((x) => {
+        const nom = x.logo ? `<img src="${esc(x.logo)}" alt="${esc(x.nom)}" loading="lazy">` : `<span class="references__nom">${esc(x.nom)}</span>`;
+        return `<li>${x.lien ? `<a href="${esc(x.lien)}" target="_blank" rel="noopener">${nom}</a>` : nom}${x.description ? `<p>${texteRiche(ctx, x.description)}</p>` : ""}</li>`;
+      })
+      .join("")}</ul>
+  </div>
+</section>`
+    : "";
+
   const contenu = `<section class="hero-sombre">
   <div class="conteneur hero-sombre__grille">
     <div>
       <span class="tag tag--jaune">Partenariats</span>
-      <h1 class="titre-geant">Faites découvrir votre saison <span class="jaune">à ceux qui n'écoutent pas encore de classique.</span></h1>
-      <p class="hero-sombre__texte">Révisons Nos Classiques raconte la musique classique avec impertinence, chaque jour, à ${esc(s.abonnes)} abonnés sur Instagram. Festivals, orchestres, labels, salles de concert : inventons ensemble la façon d'en parler.</p>
+      <h1 class="titre-geant">${titreSombre(ctx, t.hero.titre)}</h1>
+      <p class="hero-sombre__texte">${texteRiche(ctx, t.hero.texte)}</p>
       <div class="boutons">
-        <a class="btn btn--jaune" href="#contact">Demander le kit média</a>
+        <a class="btn btn--jaune" href="#contact">${esc(t.hero.bouton)}</a>
         ${r.site.email ? `<a class="btn btn--contour-blanc" href="mailto:${esc(r.site.email)}">Écrire directement</a>` : ""}
       </div>
     </div>
@@ -565,41 +700,43 @@ function pagePartenariats(ctx) {
 </section>
 <section class="section section--serre">
   <div class="conteneur">
-    <dl class="chiffres">
-      <div><dt>abonnés sur Instagram</dt><dd>${esc(s.abonnes)}</dd></div>
-      <div><dt>vues sur le dernier mois</dt><dd>${esc(s.vues)}</dd></div>
-      <div><dt>d'abonnés de moins de 35 ans</dt><dd>${esc(s.jeunes)}</dd></div>
-      <div><dt>publié chez De Boeck Supérieur</dt><dd>1 livre</dd></div>
-    </dl>
-    <p class="note">Chiffres Instagram de ${esc(s.date)}.</p>
+    <dl class="chiffres">${t.chiffres.liste
+      .filter((x) => x && x.valeur)
+      .slice(0, 4)
+      .map((x) => `<div><dt>${esc(jetons(ctx, x.legende || ""))}</dt><dd>${esc(jetons(ctx, x.valeur))}</dd></div>`)
+      .join("")}</dl>
+    ${t.chiffres.note ? `<p class="note">${esc(jetons(ctx, t.chiffres.note))}</p>` : ""}
   </div>
 </section>
+${blocReferences}
 <section class="section">
   <div class="conteneur pourquoi">
     <img class="pourquoi__couv" src="/images/couverture-livre.webp" alt="Couverture du livre 49 petites histoires de la musique classique" width="300" height="420" loading="lazy">
     <div>
-      <h2 class="titre-section">Pourquoi Révisons Nos Classiques</h2>
-      <div class="pourquoi__points">
-        <div><h3>Un classique qui parle aux curieux</h3><p>On raconte la musique classique par ses histoires, ses coulisses et ses débats, sans jargon. Nos contenus s'adressent autant aux curieux qu'aux mélomanes.</p></div>
-        <div><h3>Un ton qui fait réagir</h3><p>Billets d'humeur, portraits, anecdotes, brèves : chaque format est pensé pour être lu jusqu'au bout, commenté et partagé.</p></div>
-        <div><h3>Une signature reconnue</h3><p>Révisons Nos Classiques, c'est aussi un livre : « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur en 2024, avec une playlist exclusive Warner Classics.</p></div>
-      </div>
+      <h2 class="titre-section">${titreClair(ctx, t.pourquoi.titre)}</h2>
+      <div class="pourquoi__points">${t.pourquoi.points
+        .filter((x) => x && x.titre)
+        .map((x) => `<div><h3>${esc(x.titre)}</h3>${x.texte ? `<p>${texteRiche(ctx, x.texte)}</p>` : ""}</div>`)
+        .join("")}</div>
     </div>
   </div>
 </section>
 <section class="section section--papier">
   <div class="conteneur">
-    <h2 class="titre-section">Ce qu'on peut faire ensemble</h2>
-    <p class="intro">Chaque partenariat est construit sur mesure. Voici les formats les plus demandés.</p>
-    <div class="formats">${formats.map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
-    <p class="note">Tous nos partenariats sont clairement signalés à nos abonnés, conformément à la loi.</p>
+    <h2 class="titre-section">${titreClair(ctx, t.formats.titre)}</h2>
+    ${t.formats.intro ? `<p class="intro">${texteRiche(ctx, t.formats.intro)}</p>` : ""}
+    <div class="formats">${t.formats.liste
+      .filter((x) => x && x.titre)
+      .map((x) => `<div><h3>${esc(x.titre)}</h3>${x.texte ? `<p>${texteRiche(ctx, x.texte)}</p>` : ""}</div>`)
+      .join("")}</div>
+    ${t.formats.note ? `<p class="note">${texteRiche(ctx, t.formats.note)}</p>` : ""}
   </div>
 </section>
 <section class="bande-nl dechire" id="contact">
   <div class="conteneur bande-nl__grille">
     <div>
-      <h2 class="titre-geant">Parlons de votre projet.</h2>
-      <p class="bande-nl__texte">Recevez notre kit média : statistiques détaillées de l'audience, exemples de contenus et tarifs.</p>
+      <h2 class="titre-geant">${titreJaune(ctx, t.contact.titre)}</h2>
+      ${t.contact.texte ? `<p class="bande-nl__texte">${texteRiche(ctx, t.contact.texte)}</p>` : ""}
       ${r.site.email ? `<p class="bande-nl__texte">Vous préférez écrire directement ?<br><a href="mailto:${esc(r.site.email)}"><strong>${esc(r.site.email)}</strong></a></p>` : ""}
     </div>
     <form class="carte-form form-contact" name="partenariat" method="POST" action="/partenariats/merci/" data-netlify="true" netlify-honeypot="bot-field">
@@ -612,13 +749,13 @@ function pagePartenariats(ctx) {
       <p><label for="p-email">Email professionnel</label><input id="p-email" name="email" type="email" autocomplete="email" required placeholder="prenom@structure.fr"></p>
       <p><label for="p-type">Type de projet</label><select id="p-type" name="type"><option>Promouvoir une saison ou un festival</option><option>Lancer un disque ou un artiste</option><option>Couvrir un événement</option><option>Autre projet</option></select></p>
       <p><label for="p-message">Votre message</label><textarea id="p-message" name="message" rows="5"></textarea></p>
-      <button type="submit" class="btn btn--noir">Recevoir le kit média</button>
+      <button type="submit" class="btn btn--noir">${esc(t.contact.bouton)}</button>
     </form>
   </div>
 </section>`;
   return page(ctx, {
     titre: "Partenariats",
-    description: `Festivals, orchestres, labels : faites découvrir votre saison aux ${s.abonnes} abonnés de Révisons Nos Classiques.`,
+    description: `Festivals, orchestres, labels : faites découvrir votre saison aux ${r.stats.abonnes} abonnés de Révisons Nos Classiques.`,
     chemin: "/partenariats/",
     courant: "partenariats",
     contenu,
@@ -688,4 +825,4 @@ ${bandeNewsletterCompacte(ctx)}`;
   return page(ctx, { titre: "Page introuvable", chemin: "/404.html", contenu });
 }
 
-module.exports = { pageAccueil, pageArticle, pageRubrique, pageBreves, pagePartenariats, pageTexte, pageMerci, pagePartenariatMerci, page404, RUBRIQUES, MAGAZINE, urlArticle };
+module.exports = { pageAccueil, pageArticle, pageRubrique, pageBreves, pagePartenariats, pageTexte, pageMerci, pagePartenariatMerci, page404, RUBRIQUES, MAGAZINE, ACCUEIL_DEFAUT, PARTENARIATS_DEFAUT, urlArticle };

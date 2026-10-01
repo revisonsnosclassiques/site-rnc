@@ -1,0 +1,98 @@
+{
+  "hero": {
+    "titre": "Faites découvrir votre saison ==à ceux qui n'écoutent pas encore de classique.==",
+    "texte": "Révisons Nos Classiques raconte la musique classique avec impertinence, chaque jour, à {abonnes} abonnés sur Instagram. Festivals, orchestres, labels, salles de concert : inventons ensemble la façon d'en parler.",
+    "bouton": "Demander le kit média"
+  },
+  "chiffres": {
+    "liste": [
+      {
+        "valeur": "{abonnes}",
+        "legende": "abonnés sur Instagram"
+      },
+      {
+        "valeur": "{vues}",
+        "legende": "vues sur le dernier mois"
+      },
+      {
+        "valeur": "{jeunes}",
+        "legende": "d'abonnés de moins de 35 ans"
+      },
+      {
+        "valeur": "1 livre",
+        "legende": "publié chez De Boeck Supérieur"
+      }
+    ],
+    "note": "Chiffres Instagram de {date}."
+  },
+  "references": {
+    "titre": "Ils nous ont fait confiance",
+    "liste": [
+      {
+        "nom": "Naïve",
+        "description": "Interview de la pianiste Stella Almondo autour de son album Liszt (2026).",
+        "logo": "",
+        "lien": ""
+      },
+      {
+        "nom": "De Boeck Supérieur",
+        "description": "Éditeur du livre « 49 petites histoires de la musique classique » (2024).",
+        "logo": "",
+        "lien": ""
+      }
+    ]
+  },
+  "pourquoi": {
+    "titre": "Pourquoi Révisons Nos Classiques",
+    "points": [
+      {
+        "titre": "Un classique qui parle aux curieux",
+        "texte": "On raconte la musique classique par ses histoires, ses coulisses et ses débats, sans jargon. Nos contenus s'adressent autant aux curieux qu'aux mélomanes."
+      },
+      {
+        "titre": "Un ton qui fait réagir",
+        "texte": "Billets d'humeur, portraits, anecdotes, brèves : chaque format est pensé pour être lu jusqu'au bout, commenté et partagé."
+      },
+      {
+        "titre": "Une signature reconnue",
+        "texte": "Révisons Nos Classiques, c'est aussi un livre : « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur en 2024, avec une playlist exclusive Warner Classics."
+      }
+    ]
+  },
+  "formats": {
+    "titre": "Ce qu'on peut faire ensemble",
+    "intro": "Chaque partenariat est construit sur mesure. Voici les formats les plus demandés.",
+    "liste": [
+      {
+        "titre": "Reel dédié",
+        "texte": "Une vidéo sur votre œuvre, votre artiste ou votre saison, racontée à notre façon."
+      },
+      {
+        "titre": "Carrousel",
+        "texte": "Une histoire en plusieurs images, idéale pour présenter un programme, un compositeur ou un anniversaire."
+      },
+      {
+        "titre": "Brève et stories",
+        "texte": "Une annonce rapide pour un concert, une sortie de disque ou l'ouverture d'une billetterie."
+      },
+      {
+        "titre": "Couverture d'événement",
+        "texte": "On vient à votre festival ou à votre concert, et on le raconte en direct à nos abonnés."
+      },
+      {
+        "titre": "Newsletter",
+        "texte": "Un encart dans la newsletter, lue par des abonnés qui ont choisi de nous suivre."
+      },
+      {
+        "titre": "Podcast",
+        "texte": "Un épisode ou une mention dans le podcast Révisons Nos Classiques, dès sa sortie."
+      }
+    ],
+    "note": "Tous nos partenariats sont clairement signalés à nos abonnés, conformément à la loi."
+  },
+  "contact": {
+    "titre": "Parlons de votre projet.",
+    "texte": "Recevez notre kit média : statistiques détaillées de l'audience, exemples de contenus et tarifs.",
+    "bouton": "Recevoir le kit média"
+  }
+}
