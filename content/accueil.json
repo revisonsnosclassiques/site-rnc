@@ -1,4 +1,23 @@
 {
+  "podcast": {
+    "titre": "Le podcast arrive.",
+    "titre_en_ligne": "Le podcast est là.",
+    "texte": "Le même regard impertinent sur la musique classique, cette fois à écouter.\nDécouvrez les liens entre la musique et la politique, d'hier à aujourd'hui."
+  },
+  "livre": {
+    "titre": "49 petites histoires de la musique classique",
+    "texte": "Pourquoi Carmen fut d'abord un échec. Comment Liszt devint la première rockstar de l'histoire. Et quel rapport entre une fistule de Louis XIV et l'hymne britannique. 49 histoires, et 49 morceaux commentés à écouter dans une playlist exclusive Warner Classics.",
+    "infos": "Éditions De Boeck Supérieur, 192 pages",
+    "bouton": "Commander le livre"
+  },
+  "a_lire": {
+    "titre": "À lire aussi"
+  },
+  "breves": {
+    "titre": "Les brèves",
+    "encart_titre": "Ne ratez plus aucune brève, retrouvez le meilleur de la semaine dans votre boîte mail.",
+    "encart_texte": "L'actu du milieu classique, résumée dans votre boîte mail."
+  },
   "ordre": [
     "newsletter",
     "a_lire",
@@ -8,13 +27,18 @@
     "partenaires",
     "final"
   ],
-  "breves": {
-    "titre": "Les brèves",
-    "encart_titre": "Ne ratez plus aucune brève.",
-    "encart_texte": "L'actu du milieu classique, résumée dans votre boîte mail."
+  "final": {
+    "titre": "Révisez vos classiques depuis votre boîte mail.",
+    "texte": "Inscription en dix secondes, désinscription en un clic.",
+    "bouton": "Je m'inscris"
+  },
+  "videos": {
+    "titre": "Les vidéos",
+    "texte": "Les questions de société qui traversent la musique classique.",
+    "vide": "Nos vidéos arrivent ici très bientôt. En attendant, elles sont toutes sur Instagram."
   },
   "newsletter": {
-    "titre": "L'actu du classique, sans le vernis, dans votre boîte mail.",
+    "titre": "L'actu du classique, avec un regard engagé, dans votre boîte mail.",
     "atouts": [
       "Les coulisses des maisons d'opéra et des orchestres, décryptées.",
       "Des anecdotes à ressortir au prochain dîner.",
@@ -23,37 +47,13 @@
     "preuve": "Déjà **{abonnes} abonnés** nous suivent sur Instagram.",
     "bouton": "Recevoir la newsletter"
   },
-  "a_lire": {
-    "titre": "À lire aussi"
-  },
-  "podcast": {
-    "titre": "Le podcast arrive.",
-    "titre_en_ligne": "Le podcast est là.",
-    "texte": "Le même regard impertinent sur la musique classique, cette fois à écouter."
-  },
-  "livre": {
-    "titre": "49 petites histoires de la musique classique",
-    "texte": "Pourquoi Carmen fut d'abord un échec. Comment Liszt devint la première rockstar de l'histoire. Et quel rapport entre une fistule de Louis XIV et l'hymne britannique. 49 histoires, et 49 morceaux commentés à écouter dans une playlist exclusive Warner Classics.",
-    "infos": "Éditions De Boeck Supérieur, 192 pages",
-    "bouton": "Commander le livre"
-  },
-  "videos": {
-    "titre": "Les vidéos",
-    "texte": "Nos reels sur les questions de société qui traversent la musique classique.",
-    "vide": "Nos vidéos arrivent ici très bientôt. En attendant, elles sont toutes sur Instagram."
+  "partenaires": {
+    "titre": "Artiste, festival, orchestre, label, salle de concert ?",
+    "texte": "Révisons Nos Classiques s'adresse chaque jour à {abonnes} abonnés sur Instagram, curieux et passionnés de musique classique. C'est aussi un livre, « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur. Parlons de votre saison, de vos artistes, vos projets, votre communication.",
+    "bouton": "Découvrir les partenariats"
   },
   "opus": {
     "titre": "Opus, le jeu",
     "texte": "Instrumentiste, chanteur, compositeur ou chef d'orchestre : choisissez votre voie et faites carrière dans la musique classique."
-  },
-  "partenaires": {
-    "titre": "Festival, orchestre, label, salle de concert ?",
-    "texte": "Révisons Nos Classiques s'adresse chaque jour à {abonnes} abonnés sur Instagram, curieux et passionnés de musique classique. C'est aussi un livre, « 49 petites histoires de la musique classique », publié chez De Boeck Supérieur. Parlons de votre saison, de vos artistes et de vos projets.",
-    "bouton": "Découvrir les partenariats"
-  },
-  "final": {
-    "titre": "Révisez vos classiques ==depuis votre boîte mail.==",
-    "texte": "Inscription en dix secondes, désinscription en un clic.",
-    "bouton": "Je m'inscris"
   }
 }
