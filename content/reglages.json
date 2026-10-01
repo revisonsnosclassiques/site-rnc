@@ -1,39 +1,39 @@
 {
-  "site": {
-    "nom": "Révisons Nos Classiques",
-    "url": "https://revisonsnosclassiques.fr",
-    "slogan": "La musique classique, sans le vernis.",
-    "description": "Scandales dans les maisons d'opéra, compositeurs effacés de l'histoire, anecdotes improbables : la musique classique racontée avec impertinence.",
-    "email": ""
+  "playlists": {
+    "lien": "https://open.spotify.com/user/114039318?si=d485eeb789ff42ac"
   },
   "annonce": "Le seul média engagé sur la musique classique",
-  "newsletter": {
-    "action": "",
-    "cadeau": "Les 10 scandales qui ont secoué la musique classique"
+  "podcast": {
+    "lien": ""
   },
-  "stats": {
-    "abonnes": "28 000",
-    "vues": "800 000",
-    "jeunes": "57 %",
-    "date": "septembre 2026"
-  },
-  "reseaux": {
-    "instagram": "https://www.instagram.com/revisonsnosclassiques/",
-    "facebook": "",
-    "spotify": "https://open.spotify.com/user/114039318"
+  "site": {
+    "nom": "Révisons Nos Classiques",
+    "url": "https://revisonsnosclassiques.org",
+    "slogan": "La musique classique, sans le vernis.",
+    "description": "Scandales dans les maisons d'opéra, compositeurs effacés de l'histoire, anecdotes improbables : la musique classique racontée avec impertinence.",
+    "email": "revisonsnosclassiques@gmail.com"
   },
   "livre": {
     "lien": "https://tidd.ly/4egindQ",
     "libraire": "",
     "prix": "17,90 €"
   },
-  "podcast": {
-    "lien": ""
-  },
-  "playlists": {
-    "lien": ""
+  "newsletter": {
+    "action": "https://e9ca77c2.sibforms.com/serve/MUIFAGHcPnfpbO5F4nxUnq8h4MkJOQtgQu3ycK8DCZJKdZWjx0qimSjEjPZQdUOzNkw1AublRh9DqZ8MdKEXelFd_jYEc7asRqaX03ZXH557HWE5GGuWUsfZ_0s4KoIuJkneDcYk9Dt-RX6pHynhTd1uS4GbGSqe-ID8UIDAAskrxqHjfMiBxLmiBGd3iZITwMpfO-Xp-c0WSjYskQ==",
+    "cadeau": "Les 10 scandales qui ont secoué la musique classique"
   },
   "opus": {
-    "lien": ""
+    "lien": "https://opus-jeu.netlify.app/"
+  },
+  "stats": {
+    "abonnes": "28 500",
+    "vues": "800 000",
+    "jeunes": "57 %",
+    "date": "septembre 2026"
+  },
+  "reseaux": {
+    "instagram": "https://www.instagram.com/revisonsnosclassiques/",
+    "facebook": "https://www.facebook.com/revisonsnosclassiques",
+    "spotify": "https://open.spotify.com/user/114039318"
   }
 }
