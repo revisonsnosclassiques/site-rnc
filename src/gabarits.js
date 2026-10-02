@@ -4,6 +4,7 @@
 const { esc, surligne, brut, enLigne, markdown, dateFr, dateCourte, tempsLecture } = require("./outils");
 
 const RUBRIQUES = {
+  Actu: { id: "actu", chemin: "/actu/", titre: "Actu" },
   "Billet d'humeur": { id: "billets", chemin: "/billets/", titre: "Billets d'humeur" },
   Portrait: { id: "portraits", chemin: "/portraits/", titre: "Portraits" },
   Anecdote: { id: "anecdotes", chemin: "/anecdotes/", titre: "Anecdotes" },
@@ -11,7 +12,7 @@ const RUBRIQUES = {
 };
 
 // Rubriques regroupées dans le menu déroulant « Magazine », dans cet ordre.
-const MAGAZINE = ["anecdotes", "portraits", "critiques", "billets"];
+const MAGAZINE = ["actu", "anecdotes", "portraits", "critiques", "billets"];
 
 const urlArticle = (a) => `/articles/${a.slug}/`;
 const rubrique = (a) => RUBRIQUES[a.type] || RUBRIQUES.Anecdote;
