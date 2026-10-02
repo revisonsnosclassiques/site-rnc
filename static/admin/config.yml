@@ -207,7 +207,7 @@ collections:
         name: type
         widget: select
         hint: "« Critique » correspond à la rubrique Critiques de disques."
-        options: ["Billet d'humeur", "Anecdote", "Portrait", "Critique"]
+        options: ["Actu", "Billet d'humeur", "Anecdote", "Portrait", "Critique"]
       - label: Date de publication
         name: date
         widget: datetime
